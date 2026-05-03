@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Today - {{ user.name }}{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="who"><strong>{{ user.name }}</strong> &middot; {{ log_date }}</div>
+
+  <div class="metric">
+    <div class="metric-label"><span>Calories</span><span>{{ cals }} / {{ user.calorie_target }}</span></div>
+    <div class="bar"><div class="bar-fill cal" style="width: {{ cal_pct }}%"></div></div>
+    <div class="metric-sub">{{ cal_remaining }} remaining</div>
+  </div>
+
+  <div class="metric">
+    <div class="metric-label"><span>Protein (g)</span><span>{{ prot }} / {{ user.protein_target }}</span></div>
+    <div class="bar"><div class="bar-fill prot" style="width: {{ prot_pct }}%"></div></div>
+    <div class="metric-sub">{{ prot_remaining }} g remaining</div>
+  </div>
+
+  <div class="action-row">
+    <a href="/log" class="primary btn">+ Log food</a>
+    <a href="/ask" class="ghost btn">Ask Claude</a>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Today's entries</h2>
+  {% if not entries %}
+    <p class="muted">Nothing logged yet.</p>
+  {% else %}
+    <ul class="entries">
+      {% for e in entries %}
+        <li>
+          <div class="entry-main">
+            <div class="entry-name">{{ e.food_name }}{% if e.servings != 1 %} <span class="muted">x{{ e.servings }}</span>{% endif %}</div>
+            <div class="entry-stats">{{ (e.calories * e.servings) | int }} cal &middot; {{ '%.1f' % (e.protein_g * e.servings) }} g protein</div>
+          </div>
+          <form method="post" action="/entries/{{ e.id }}/delete" onsubmit="return confirm('Delete this entry?')">
+            <button class="x" type="submit" aria-label="delete">&times;</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+{% endblock %}

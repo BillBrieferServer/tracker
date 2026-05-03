@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f766e">
+<title>{% block title %}Tracker{% endblock %}</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a href="/today" class="brand">Tracker</a>
+  <nav>
+    {% if request.cookies.get('tracker_user') %}
+      <a href="/today">Today</a>
+      <a href="/log">Log</a>
+      <a href="/ask">Ask</a>
+      <a href="/library">Library</a>
+      <a href="/settings">Settings</a>
+      <a href="/switch">Switch</a>
+    {% endif %}
+    <a href="/logout">Logout</a>
+  </nav>
+</header>
+<main>
+{% block content %}{% endblock %}
+</main>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Edit food{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Edit food</h1>
+  <form method="post" action="/library/{{ food.id }}/edit" class="stack">
+    <label>Name<input name="name" value="{{ food.name }}" required></label>
+    <div class="row2">
+      <label>Calories<input name="calories" type="number" min="0" value="{{ food.calories }}" required></label>
+      <label>Protein (g)<input name="protein_g" type="number" step="0.1" min="0" value="{{ food.protein_g }}" required></label>
+    </div>
+    <label>Serving description<input name="serving_description" value="{{ food.serving_description }}"></label>
+    <div class="action-row">
+      <button class="primary btn" type="submit">Save</button>
+      <a class="ghost btn" href="/library">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Daily targets</h1>
+  {% for u in users %}
+  <form method="post" action="/settings/{{ u.id }}" class="stack settings-form">
+    <h2>{{ u.name }}</h2>
+    <div class="row2">
+      <label>Calories<input name="calorie_target" type="number" min="0" value="{{ u.calorie_target }}" required></label>
+      <label>Protein (g)<input name="protein_target" type="number" min="0" value="{{ u.protein_target }}" required></label>
+    </div>
+    <button class="primary btn" type="submit">Save {{ u.name }}'s targets</button>
+  </form>
+  {% endfor %}
+</div>
+{% endblock %}

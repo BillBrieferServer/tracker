@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Ask Claude{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Ask Claude</h1>
+  <p class="muted">Describe the food. Fill in any numbers you already know (from a label or menu) - Claude only fills the blanks.</p>
+
+  <form method="post" action="/ask/estimate" class="stack">
+    <label>Description
+      <textarea name="description" rows="3" required placeholder="e.g. turkey sandwich on whole wheat, no mayo, lettuce and tomato">{{ form.description or '' }}</textarea>
+    </label>
+    <div class="row2">
+      <label>Calories (if known)<input name="calories" type="number" min="0" value="{{ form.calories or '' }}"></label>
+      <label>Protein g (if known)<input name="protein_g" type="number" step="0.1" min="0" value="{{ form.protein_g or '' }}"></label>
+    </div>
+    <button class="primary btn" type="submit">Estimate</button>
+  </form>
+
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+  {% if result %}
+  <div class="card inset">
+    <h2>Result</h2>
+    <p><strong>{{ result.name }}</strong>{% if result.serving_description %} <span class="muted">({{ result.serving_description }})</span>{% endif %}</p>
+    <ul class="result-list">
+      <li>Calories: <strong>{{ result.calories }}</strong>{% if result.cal_reason %} <span class="muted">- {{ result.cal_reason }}</span>{% endif %}</li>
+      <li>Protein: <strong>{{ '%.1f' % result.protein_g }} g</strong>{% if result.prot_reason %} <span class="muted">- {{ result.prot_reason }}</span>{% endif %}</li>
+    </ul>
+
+    <form method="post" action="/ask/log" class="stack">
+      <input type="hidden" name="name" value="{{ result.name }}">
+      <input type="hidden" name="calories" value="{{ result.calories }}">
+      <input type="hidden" name="protein_g" value="{{ result.protein_g }}">
+      <input type="hidden" name="serving_description" value="{{ result.serving_description }}">
+      <label>Servings<input name="servings" type="number" value="1" min="0.25" step="0.25"></label>
+      <label class="check"><input type="checkbox" name="save_to_library" value="1" checked> Save to library</label>
+      <button class="primary btn" type="submit">Log it</button>
+    </form>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

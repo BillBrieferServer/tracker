@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Who's logging?{% endblock %}
+{% block content %}
+<div class="card center">
+  <h1>Who's logging?</h1>
+  <div class="tile-row">
+  {% for u in users %}
+    <form method="post" action="/pick/{{ u.id }}">
+      <button class="tile" type="submit">{{ u.name }}</button>
+    </form>
+  {% endfor %}
+  </div>
+</div>
+{% endblock %}

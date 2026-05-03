@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Library{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Food library</h1>
+  <form method="get" action="/library" class="search">
+    <input type="search" name="q" value="{{ q }}" placeholder="Search...">
+    <button class="ghost btn" type="submit">Search</button>
+  </form>
+
+  {% if foods %}
+    <ul class="entries">
+      {% for f in foods %}
+        <li>
+          <div class="entry-main">
+            <div class="entry-name">{{ f.name }} <span class="badge {{ f.source }}">{{ f.source }}</span></div>
+            <div class="entry-stats">{{ f.calories }} cal &middot; {{ '%.1f' % f.protein_g }} g{% if f.serving_description %} &middot; <span class="muted">{{ f.serving_description }}</span>{% endif %}</div>
+          </div>
+          <div class="row-actions">
+            <a class="ghost btn" href="/library/{{ f.id }}/edit">Edit</a>
+            <form method="post" action="/library/{{ f.id }}/delete" onsubmit="return confirm('Delete {{ f.name|e }}?')">
+              <button class="x" type="submit" aria-label="delete">&times;</button>
+            </form>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted">No foods saved yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

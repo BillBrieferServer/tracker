@@ -1,0 +1,11 @@
+services:
+  app:
+    build: .
+    container_name: tracker-app
+    ports:
+      - "8060:8060"
+    volumes:
+      - ./data:/app/data
+    env_file:
+      - .env
+    restart: unless-stopped
