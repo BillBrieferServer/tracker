@@ -505,3 +505,49 @@ async def update_targets(
     await db.commit()
     await db.close()
     return RedirectResponse("/settings", status_code=303)
+
+
+@app.get("/history", response_class=HTMLResponse)
+async def history(request: Request):
+    if not is_authenticated(request):
+        return RedirectResponse("/login", status_code=303)
+    user_id = current_user_id(request)
+    if user_id is None:
+        return RedirectResponse("/pick", status_code=303)
+
+    db = await get_db()
+    user = await get_user(db, user_id)
+    if user is None:
+        await db.close()
+        return RedirectResponse("/pick", status_code=303)
+
+    cur = await db.execute(
+        """SELECT log_date,
+                  COALESCE(SUM(calories*servings),0) AS cals,
+                  COALESCE(SUM(protein_g*servings),0) AS prot
+             FROM entries
+             WHERE user_id=?
+             GROUP BY log_date
+             ORDER BY log_date DESC
+             LIMIT 60""",
+        (user_id,),
+    )
+    rows = await cur.fetchall()
+    await db.close()
+
+    days = []
+    for r in rows:
+        cals = int(r["cals"])
+        prot = float(r["prot"])
+        days.append({
+            "log_date": r["log_date"],
+            "cals": cals,
+            "prot": round(prot, 1),
+            "cal_pct": int(cals / user["calorie_target"] * 100) if user["calorie_target"] else 0,
+            "prot_pct": int(prot / user["protein_target"] * 100) if user["protein_target"] else 0,
+        })
+
+    return templates.TemplateResponse(
+        "history.html",
+        {"request": request, "user": user, "days": days},
+    )

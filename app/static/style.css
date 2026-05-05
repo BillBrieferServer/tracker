@@ -243,3 +243,8 @@ button:active, .btn:active { transform: translateY(1px); }
   main { padding: 12px; }
   .card { padding: 14px; border-radius: 12px; }
 }
+
+table.history { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+table.history th, table.history td { padding: 0.5rem 0.4rem; text-align: left; border-bottom: 1px solid #e5e7eb; }
+table.history th { font-weight: 600; color: #475569; font-size: 0.9rem; }
+table.history td a { text-decoration: none; }
