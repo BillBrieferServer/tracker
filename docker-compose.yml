@@ -8,4 +8,6 @@ services:
       - ./data:/app/data
     env_file:
       - .env
+    environment:
+      - TZ=America/Denver
     restart: unless-stopped
